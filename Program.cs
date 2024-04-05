@@ -31,7 +31,9 @@ app.MapGet("/api/upload", async Task<IResult> (HttpRequest request) =>
 
 app.MapGet("/api/journal/date/{date}", (string date) =>
 {
-    return Results.Text(Journal.ReadDate(date));
+    string journal = Journal.ReadDate(date);
+    if (journal == "") { return Results.NotFound(); }
+    return Results.Text(journal);
 });
 
 Log.Initialize();
