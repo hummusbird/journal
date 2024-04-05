@@ -24,10 +24,11 @@ app.UseDefaultFiles();      // use index.html & index.css
 app.UseStaticFiles();       // enable static file serving
 app.UseCors(MyAllowSpecificOrigins);
 
-app.MapPost("/api/upload", async Task<IResult> (HttpRequest request) =>
+app.MapGet("/api/upload", async Task<IResult> (HttpRequest request) =>
 {
     return Results.Ok();
 });
 
 Log.Initialize();
+Journal.Load();
 app.Run();
