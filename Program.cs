@@ -24,18 +24,35 @@ app.UseDefaultFiles();      // use index.html & index.css
 app.UseStaticFiles();       // enable static file serving
 app.UseCors(MyAllowSpecificOrigins);
 
-app.MapGet("/api/upload", async Task<IResult> (HttpRequest request) =>
-{
-    return Results.Ok();
-});
-
-app.MapGet("/api/journal/date/{date}", (string date) =>
-{
-    string journal = Journal.ReadDate(date);
-    if (journal == "") { return Results.NotFound(); }
-    return Results.Text(journal);
-});
-
 Log.Initialize();
-Journal.Load();
+
+if (true) // later this will be a variable to enable / disable the journal
+{
+    Journal.Load();
+
+    app.MapGet("/api/journal/date/{date}", (string date) =>
+    {
+        string journal = Journal.ReadDate(date);
+        if (journal == "") { return Results.NotFound(); }
+        return Results.Text(journal);
+    });
+
+    app.MapPost("/api/journal/new", async Task<IResult> (HttpRequest request) =>
+    {
+        if (!request.HasFormContentType) { return Results.BadRequest(); }
+
+        var form = await request.ReadFormAsync();
+        var data = form.ToList().Find(key => key.Key == "data");
+
+        if (string.IsNullOrEmpty(data.Value)) // no data included
+        {
+            return Results.BadRequest();
+        }
+
+        Journal.AddEntry(data.Value!);
+
+        return Results.Ok();
+    });
+}
+
 app.Run();
