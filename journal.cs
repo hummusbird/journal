@@ -1,10 +1,12 @@
 public class Journal
 {
     public static List<string>? journal;
+    private static string path = "journal.txt";
 
     public static void Load()
     {
-        journal = File.ReadAllLines("journal.txt").Where(line => line != "").ToList(); // filter out empty lines
+        if (!File.Exists(path)) { File.Create(path); }
+        journal = File.ReadAllLines(path).Where(line => line != "").ToList(); // filter out empty lines
         Log.Info("Loaded journal of length " + journal.Count);
     }
 
