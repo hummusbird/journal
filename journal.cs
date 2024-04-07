@@ -10,6 +10,11 @@ public class Journal
         Log.Info("Loaded journal of length " + journal.Count);
     }
 
+    private static void Write()
+    {
+        File.WriteAllLines(path, journal!.ToArray());
+    }
+
     public static string ReadDate(string date)
     { // todo: return between 3am and 3am the next day, not the whole day
         return string.Join("\n", journal!.Where(line => line.StartsWith("[" + date)).ToList());
@@ -17,7 +22,9 @@ public class Journal
 
     public static void AddEntry(string entry)
     {
+        entry = entry.Replace("\n", "");
         string timestamp = "[" + DateTime.Now.ToString("yyyy-MM-dd hh:mmtt") + "] ";
         journal!.Add(timestamp + entry);
+        Write();
     }
 }
