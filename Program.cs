@@ -37,6 +37,13 @@ if (true) // later this will be a variable to enable / disable the journal
         return Results.Text(journal);
     });
 
+    app.MapGet("/api/journal/today", () =>
+    {
+        string journal = Journal.ReadDate(DateTime.Now.ToString("yyyy-MM-dd"));
+        if (journal == "") { return Results.NotFound(); }
+        return Results.Text(journal);
+    });
+
     app.MapPost("/api/journal/new", async Task<IResult> (HttpRequest request) =>
     {
         if (!request.HasFormContentType) { return Results.BadRequest(); }
