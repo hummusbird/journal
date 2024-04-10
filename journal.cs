@@ -5,7 +5,11 @@ public class Journal
 
     public static void Load()
     {
-        if (!File.Exists(path)) { File.Create(path); }
+        if (!File.Exists(path))
+        {
+            File.Create(path).Close();
+            Log.Warning("Created journal.txt");
+        }
         journal = File.ReadAllLines(path).Where(line => line != "").ToList(); // filter out empty lines
         Log.Info("Loaded journal of length " + journal.Count);
     }
