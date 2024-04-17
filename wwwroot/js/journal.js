@@ -19,7 +19,8 @@ function SendEntry() {
             method: "POST"
         })
         .catch(e => console.log(e))
-    delay(50)
+    delay(150)
     document.getElementById("textzone").scrollTop = document.getElementById("textzone").scrollHeight;
     GetJournal();
+    document.getElementById("entrybox").value = "";
 }
