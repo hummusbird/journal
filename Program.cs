@@ -57,6 +57,7 @@ if (true) // later this will be a variable to enable / disable the journal
         }
 
         Journal.AddEntry(data.Value!);
+        Log.Info("New journal entry: " + data.Value);
 
         return Results.Ok();
     });
