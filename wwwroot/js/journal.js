@@ -6,6 +6,7 @@ async function GetJournal() {
     let text = await res.text();
     document.getElementById("textzone").value = text;
     console.log(text)
+    document.getElementById("textzone").scrollTop = document.getElementById("textzone").scrollHeight;
 }
 
 function SendEntry() {
@@ -18,6 +19,7 @@ function SendEntry() {
             method: "POST"
         })
         .catch(e => console.log(e))
-    delay(50);
+    delay(50)
+    document.getElementById("textzone").scrollTop = document.getElementById("textzone").scrollHeight;
     GetJournal();
 }
