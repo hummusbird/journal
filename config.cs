@@ -1,4 +1,3 @@
-using System.Diagnostics.Eventing.Reader;
 using Newtonsoft.Json;
 
 public class Settings
@@ -17,7 +16,6 @@ public static class Config
     public static bool LoggingEnabled { get; private set; } = true;
     public static string? LogPath { get; private set; } = "logs";
     private static string? apikey { get; set; } = "";
-
 
     public static void Load()
     {
