@@ -27,7 +27,7 @@ app.UseCors(MyAllowSpecificOrigins);
 Log.Initialize();
 Config.Load();
 
-if (Config.JournalEnabled) // later this will be a variable to enable / disable the journal
+if (Config.JournalEnabled)
 {
     Journal.Load();
 
