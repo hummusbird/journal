@@ -70,21 +70,24 @@ public static partial class Log
             if (level == LogLevel.CRIT || level == LogLevel.DBUG) { Console.Write($"[{new FileInfo(path.ToString()).Name}:{functionName}:{line}] "); }
             Console.WriteLine($"{value}");
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter($@"logs/latest.log", append: true)) { file.WriteLine(logMessage); }
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter($@"logs/{prefix}.log", append: true)) { file.WriteLine(logMessage); }
+            if (Config.LoggingEnabled) // write logfiles
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter($@"{Config.LogPath}/latest.log", append: true)) { file.WriteLine(logMessage); }
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter($@"{Config.LogPath}/{prefix}.log", append: true)) { file.WriteLine(logMessage); }
+            }
         }
     }
 
     public static void Initialize()
     {
-        if (!Directory.Exists($@"logs")) // create log folder
+        if (!Directory.Exists($@"{Config.LogPath}")) // create log folder
         {
-            Directory.CreateDirectory($@"logs");
+            Directory.CreateDirectory($@"{Config.LogPath}");
         }
 
-        if (File.Exists($@"logs/latest.log")) // clear latest.log
+        if (File.Exists($@"{Config.LogPath}/latest.log")) // clear latest.log
         {
-            System.IO.File.WriteAllText($@"logs/latest.log", string.Empty);
+            System.IO.File.WriteAllText($@"{Config.LogPath}/latest.log", string.Empty);
         }
 
         Thread cleanupThread = new Thread(RunLogCleanup);
@@ -93,7 +96,7 @@ public static partial class Log
 
     private static void RunLogCleanup() // clear any files older than MAX_LOG_AGE
     {
-        foreach (FileInfo file in new DirectoryInfo($@"logs/").GetFiles().Where(file => file.LastWriteTime < DateTime.Now - MAX_LOG_AGE))
+        foreach (FileInfo file in new DirectoryInfo($@"{Config.LogPath}/").GetFiles().Where(file => file.LastWriteTime < DateTime.Now - MAX_LOG_AGE))
         {
             Log.Warning($"Deleting old log file {file.Name}");
             file.Delete();
